@@ -1,0 +1,3 @@
+# SSL key files
+*/**.key
+*/**.pem
