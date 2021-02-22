@@ -27,10 +27,10 @@ ADD --chown=${USER}:${USER} jupyter_notebook_config.py ${USER_HOME}/.jupyter/jup
 ADD --chown=${USER}:${USER} ${SSL_KEY_NAME}.pem ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.pem
 ADD --chown=${USER}:${USER} ${SSL_KEY_NAME}.key ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.key
 # Update configuration
-#RUN sed -i "s/##NB_PASSWORD##/$(pipenv run python -c 'import os; from notebook.auth import passwd; passwd(os.getenv("NB_PASSWORD"))')/g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
+RUN sed -i "s/##NB_PASSWORD##/$(pipenv run python -c 'import sys; from IPython.lib import passwd; print(passwd(sys.argv[1]))' ${NB_PASSWORD})/g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
 RUN sed -i -r "s|##USER_HOME##|${USER_HOME}|g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
 RUN sed -i "s/##SSL_KEY_NAME##/${SSL_KEY_NAME}/g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
 
 EXPOSE 8080
-ENTRYPOINT ["bash"]
-# CMD ["pipenv", "run", "jupyter", "lab"]
+ENTRYPOINT ["bash", "-c"]
+CMD ["pipenv run jupyter lab"]

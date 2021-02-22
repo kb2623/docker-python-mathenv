@@ -65,7 +65,7 @@
 #  token login mechanism.
 #  
 #  This can be set to false to prevent changing password from the UI/API.
-#c.NotebookApp.allow_password_change = True
+c.NotebookApp.allow_password_change = False
 
 ## Whether to allow the user to run the notebook as root.
 #c.NotebookApp.allow_root = False
@@ -226,7 +226,7 @@ c.NotebookApp.open_browser = False
 #    from notebook.auth import passwd; passwd()
 #  
 #  The string should be of the form type:salt:hashed-password.
-#c.NotebookApp.password = '##NB_PASSWORD##'
+c.NotebookApp.password = '##NB_PASSWORD##'
 
 ## Forces users to use a password for the Notebook server. This is useful in a
 #  multi user environment, for instance when everybody in the LAN can access each
@@ -234,7 +234,7 @@ c.NotebookApp.open_browser = False
 #  
 #  In such a case, server the notebook server on localhost is not secure since
 #  any user can connect to the notebook server via ssh.
-#c.NotebookApp.password_required = False
+c.NotebookApp.password_required = True
 
 ## The port the notebook server will listen on.
 c.NotebookApp.port = 8080
