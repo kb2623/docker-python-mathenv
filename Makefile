@@ -10,7 +10,7 @@ build: $(SSL_KEY_NAME).key
 		-t $(D_IMGAE_NAME):$(D_IMGAE_VERSION) .
 
 run:
-	docker run --rm -it $(D_IMGAE_NAME):$(D_IMGAE_VERSION)
+	docker run --rm -it -p 8080:8080 $(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
 clean:
 	docker rmi $(D_IMGAE_NAME):$(D_IMGAE_VERSION)

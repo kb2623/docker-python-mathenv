@@ -19,17 +19,18 @@ WORKDIR ${USER_HOME}
 # Required packages for python
 ADD Pipfile ${USER_HOME}/Pipfile
 # Install packages
-RUN pipenv install
+RUN pipenv install --skip-lock
 
 # Jupyter notebook settings
-ADD jupyter_notebook_config.py ${USER_HOME}/.jupyter/jupyter_notebook_config.py
+ADD --chown=${USER}:${USER} jupyter_notebook_config.py ${USER_HOME}/.jupyter/jupyter_notebook_config.py
 # Server key
-ADD ${SSL_KEY_NAME}.pem ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.pem
-ADD ${SSL_KEY_NAME}.key ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.key
+ADD --chown=${USER}:${USER} ${SSL_KEY_NAME}.pem ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.pem
+ADD --chown=${USER}:${USER} ${SSL_KEY_NAME}.key ${USER_HOME}/.jupyter/${SSL_KEY_NAME}.key
 # Update configuration
-RUN sed -i 's/##NB_PASSWORD##/'$(python -c "import os; from notebook.auth import passwd; passwd(os.getenv('NB_PASSWORD'))")'/g' ${USER_HOME}/.jupyter/jupyter_notebook_config.py
-RUN sed -i 's/##USER_HOME##/'${USER_HOME}'/g' ${USER_HOME}/.jupyter/jupyter_notebook_config.py
-RUN sed -i 's/##SSL_KEY_NAME##/'${SSL_KEY_NAME}'/g' ${USER_HOME}/.jupyter/jupyter_notebook_config.py
+#RUN sed -i "s/##NB_PASSWORD##/$(pipenv run python -c 'import os; from notebook.auth import passwd; passwd(os.getenv("NB_PASSWORD"))')/g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
+RUN sed -i -r "s|##USER_HOME##|${USER_HOME}|g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
+RUN sed -i "s/##SSL_KEY_NAME##/${SSL_KEY_NAME}/g" ${USER_HOME}/.jupyter/jupyter_notebook_config.py
 
 EXPOSE 8080
 ENTRYPOINT ["bash"]
+# CMD ["pipenv", "run", "jupyter", "lab"]
