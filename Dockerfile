@@ -8,7 +8,7 @@ ARG NB_PASSWORD=password1234
 RUN apt update \
  && apt install --no-install-recommends -y bash git gcc g++ gdb make neovim python-is-python3 pipenv fonts-firacode nodejs npm
 
-SHELL /bin/bash -c
+SHELL ["/bin/bash", "-c"]
 USER $(USER)
 WORKDIR $(USER_HOME)
 
@@ -28,4 +28,4 @@ RUN sed -i 's/##USER_HOME##/'$(USER_HOME)'/g' $(USER_HOME)/.jupyter/jupyter_note
 RUN sed -i 's/##SSL_KEY_NAME##/'$(SSL_KEY_NAME)'/g' $(USER_HOME)/.jupyter/jupyter_notebook_config.py
 
 EXPOSE 8080
-ENTRYPOINT bash
+ENTRYPOINT ["bash"]
