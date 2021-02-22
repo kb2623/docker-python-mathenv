@@ -1,12 +1,16 @@
 FROM debian:bullseye-slim
 
 ARG SSL_KEY_NAME=mykey
-ARG USER=root
-ARG USER_HOME=/root
+ARG USER=jupyter
+ARG USER_HOME=/home/$(USER)
 ARG NB_PASSWORD=password1234
 
+# Install base packages
 RUN apt update \
  && apt install --no-install-recommends -y bash git gcc g++ gdb make neovim python-is-python3 pipenv fonts-firacode nodejs npm
+
+# Create user
+RUN useradd -m -d $(USER_HOME)/ -s /bin/bash $(USER)
 
 SHELL ["/bin/bash", "-c"]
 USER $(USER)
