@@ -7,7 +7,7 @@ ARG NB_PASSWORD=password1234
 
 # Install base packages
 RUN apt update \
- && apt install --no-install-recommends -y bash git gcc g++ gdb make neovim python-is-python3 pipenv fonts-firacode nodejs npm
+ && apt install --no-install-recommends -y bash git gcc g++ gdb make neovim python-is-python3 pipenv fonts-firacode nodejs npm libjs-mathjax
 
 # Required packages for python
 ADD Pipfile /root/Pipfile
