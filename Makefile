@@ -3,7 +3,7 @@ D_IMGAE_VERSION:=22022021
 SSL_KEY_NAME:=mykey
 NB_PASSWORD:=password1234
 
-build: $(SSL_KEY_NAME).key
+build: rootfs/$(SSL_KEY_NAME).key
 	docker build \
 		--build-arg SSL_KEY_NAME=$(SSL_KEY_NAME) \
 		--build-arg NB_PASSWORD=$(NB_PASSWORD) \
@@ -17,9 +17,9 @@ run:
 clean:
 	docker rmi $(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
-$(SSL_KEY_NAME).key:
-	openssl req -newkey rsa:2048 -nodes -keyout $(SSL_KEY_NAME).key -x509 -out $(SSL_KEY_NAME).pem
+rootfs/$(SSL_KEY_NAME).key:
+	openssl req -newkey rsa:2048 -nodes -keyout rootfs/$(SSL_KEY_NAME).key -x509 -out rootfs/$(SSL_KEY_NAME).pem
 
-ssl_key_clean: $(SSL_KEY_NAME).key $(SSL_KEY_NAME).pem
-	rm -f $(SSL_KEY_NAME).key $(SSL_KEY_NAME).pem
+ssl_key_clean: rootfs/$(SSL_KEY_NAME).key rootfs/$(SSL_KEY_NAME).pem
+	rm -f rootfs/$(SSL_KEY_NAME).key rootfs/$(SSL_KEY_NAME).pem
 
