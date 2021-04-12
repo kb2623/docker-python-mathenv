@@ -10,5 +10,8 @@ matplotlib = "*"
 sympy = "*"
 pandas = "*"
 ipython = "*"
-jupyterlab = "*"
+ipywidgets = "*"
+jupyterlab = ">=3.0.13"
+jupyterlab-widgets = "*"
+
 
