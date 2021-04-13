@@ -2,6 +2,7 @@ D_IMGAE_NAME:=python-mathenv
 D_IMGAE_VERSION:=22022021
 SSL_KEY_NAME:=mykey
 NB_PASSWORD:=password1234
+PORT:=8080
 
 build: rootfs/$(SSL_KEY_NAME).key
 	docker build \
@@ -11,7 +12,7 @@ build: rootfs/$(SSL_KEY_NAME).key
 
 run:
 	docker run --rm -it \
-		-p 8080:8080 \
+		-p $(PORT):8080 \
 		$(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
 clean:
