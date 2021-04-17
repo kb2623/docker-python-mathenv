@@ -14,5 +14,5 @@ ipython = "*"
 ipywidgets = "*"
 jupyterlab = ">=3.0.13"
 jupyterlab-widgets = "*"
-
+nbconvert = "*"
 
