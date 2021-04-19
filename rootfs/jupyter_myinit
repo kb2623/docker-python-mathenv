@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set_password() {
+	sed -i "s/##NB_PASSWORD##/$(python${PYTHON_VERSION_MAJOR} -c 'import sys; from IPython.lib import passwd; print(passwd(sys.argv[1]))' ${NB_PASSWORD})/g" ${HOME}/.jupyter/jupyter_server_config.py
+}
+
+set_password
+jupyter lab
