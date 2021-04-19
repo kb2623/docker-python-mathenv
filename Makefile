@@ -19,6 +19,9 @@ run:
 		--name $(CONTAINER_NAME) \
 		$(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
+exec:
+	docker exec -it $(CONTAINER_NAME) /bin/bash
+
 clean:
 	docker rmi $(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
