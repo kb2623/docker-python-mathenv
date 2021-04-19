@@ -3,7 +3,7 @@ D_IMGAE_VERSION:=22022021
 
 SSL_KEY_NAME:=mykey
 
-NB_PASSWORD:=password1234
+PASSWORD:=password1234
 PORT:=8080
 CONTAINER_NAME:=python-matenv-container
 
@@ -15,7 +15,7 @@ build: rootfs/$(SSL_KEY_NAME).key
 run:
 	docker run --rm -it \
 		-p $(PORT):8080 \
-		-e NB_PASSWORD=$(NB_PASSWORD) \
+		-e NB_PASSWORD=$(PASSWORD) \
 		--name $(CONTAINER_NAME) \
 		$(D_IMGAE_NAME):$(D_IMGAE_VERSION)
 
