@@ -3,16 +3,17 @@ FROM debian:buster-slim
 ARG SSL_KEY_NAME=mykey
 ARG USER=jupyter
 ARG USER_HOME=/home/${USER}
-ARG PYTHON_VERSION_MINOR=8.2
+ARG PYTHON_VERSION_MAJOR=3
+ARG PYTHON_VERSION_MINOR_FIRST=8
+ARG PYTHON_VERSION_MINOR_SECOND=2
 
 ENV NB_PASSWORD=password1234
-ENV PYTHON_VERSION_MAJOR=3
-ENV PYTHON_VERSION=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}
+ENV PYTHON_VERSION=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST}.${PYTHON_VERSION_MINOR_SECOND}
 
 # Install base packages
 RUN apt update \
  && apt install --no-install-recommends -y bash git curl build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev cmake \
- && apt install --no-install-recommends -y tmux npm neovim pipenv fonts-firacode nodejs libjs-mathjax universal-ctags openssh-client pandoc ca-certificates
+ && apt install --no-install-recommends -y tmux npm neovim fonts-firacode nodejs libjs-mathjax universal-ctags openssh-client pandoc ca-certificates
 
 # Build and install python
 RUN cd /opt \
@@ -21,19 +22,23 @@ RUN cd /opt \
  && cd Python-${PYTHON_VERSION} \
  && ./configure --enable-optimizations \
  && make -j 4 \
- && make install
+ && make install \
+ && update-alternatives --install /usr/bin/python python /usr/local/bin/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
+ && update-alternatives --install /usr/bin/python${PYTHON_VERSION_MAJOR} python${PYTHON_VERSION_MAJOR} /usr/local/bin/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
+ && update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
+ && update-alternatives --install /usr/bin/pip${PYTHON_VERSION_MAJOR} pip${PYTHON_VERSION_MAJOR} /usr/local/bin/pip${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0
 
 # Update pip and install pipenv
-RUN pip${PYTHON_VERSION_MAJOR} install --upgrade pip \
- && pip${PYTHON_VERSION_MAJOR} install pipenv
+RUN pip install --upgrade pip \
+ && pip install pipenv
 
 # Required packages for python
 ADD rootfs/Pipfile /root/Pipfile
 # Install packages
 RUN cd /root \
  && pipenv lock -r > requirements.txt \
- && pip${PYTHON_VERSION_MAJOR} install --upgrade pip \
- && pip${PYTHON_VERSION_MAJOR} install -r requirements.txt
+ && pip install --upgrade pip \
+ && pip install -r requirements.txt
 
 # Clean build
 RUN rm -rf /opt/Python-${PYTHON_VERSION}
