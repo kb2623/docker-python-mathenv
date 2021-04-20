@@ -7,16 +7,15 @@ ARG PYTHON_VERSION_MAJOR=3
 ARG PYTHON_VERSION_MINOR_FIRST=8
 ARG PYTHON_VERSION_MINOR_SECOND=2
 
+ARG PYTHON_BUILD_DEPD=zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev
+
 ENV NB_PASSWORD=password1234
 ENV PYTHON_VERSION=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST}.${PYTHON_VERSION_MINOR_SECOND}
 
-# Install base packages
-RUN apt update \
- && apt install --no-install-recommends -y bash git curl build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev cmake \
- && apt install --no-install-recommends -y tmux npm neovim fonts-firacode nodejs libjs-mathjax universal-ctags openssh-client pandoc ca-certificates
-
 # Build and install python
-RUN cd /opt \
+RUN apt update \
+ && apt install --no-install-recommends -y bash git curl build-essential ca-certificates ${PYTHON_BUILD_DEPD} \
+ && cd /opt \
  && curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz \
  && tar -xf Python-${PYTHON_VERSION}.tar.xz \
  && cd Python-${PYTHON_VERSION} \
@@ -26,24 +25,21 @@ RUN cd /opt \
  && update-alternatives --install /usr/bin/python python /usr/local/bin/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
  && update-alternatives --install /usr/bin/python${PYTHON_VERSION_MAJOR} python${PYTHON_VERSION_MAJOR} /usr/local/bin/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
  && update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
- && update-alternatives --install /usr/bin/pip${PYTHON_VERSION_MAJOR} pip${PYTHON_VERSION_MAJOR} /usr/local/bin/pip${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0
-
-# Update pip and install pipenv
-RUN pip install --upgrade pip \
- && pip install pipenv
+ && update-alternatives --install /usr/bin/pip${PYTHON_VERSION_MAJOR} pip${PYTHON_VERSION_MAJOR} /usr/local/bin/pip${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} 0 \
+ && apt remove -y ${PYTHON_BUILD_DEPD} \
+ && rm -rf /opt/Python-${PYTHON_VERSION}
 
 # Required packages for python
 ADD rootfs/Pipfile /root/Pipfile
-# Install packages
-RUN cd /root \
- && pipenv lock -r > requirements.txt \
+# Update pip, install pipenv and install packages
+RUN apt install --no-install-recommends -y tmux npm neovim fonts-firacode nodejs libjs-mathjax universal-ctags openssh-client pandoc \
  && pip install --upgrade pip \
+ && pip install pipenv \
+ && cd /root \
+ && pipenv lock -r > requirements.txt \
  && pip install -r requirements.txt
 
-# Clean build
-RUN rm -rf /opt/Python-${PYTHON_VERSION}
-
-# Make skel dir -------------------------------------------------------------------------------------------------------------
+# Make skel dir
 ADD rootfs/.bashrc /etc/skel/.bashrc
 ADD rootfs/.tmux.conf /etc/skel/.tmux.conf
 ADD rootfs/init.vim /etc/skel/.config/nvim/init.vim
