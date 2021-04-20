@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 ARG SSL_KEY_NAME=mykey
 ARG USER=jupyter
