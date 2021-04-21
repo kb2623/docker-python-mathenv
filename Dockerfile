@@ -41,7 +41,7 @@ ADD rootfs/.bashrc /etc/skel/.bashrc
 ADD rootfs/.tmux.conf /etc/skel/.tmux.conf
 ADD rootfs/init.vim /etc/skel/.config/nvim/init.vim
 ADD rootfs/jupyter_myinit /usr/local/bin/jupyter_myinit
-RUN apt install bash tmux git openssh-client neovim universal-ctags \
+RUN apt install --no-install-recommends -y bash tmux git openssh-client neovim universal-ctags \
  && curl -fLo /etc/skel/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
  && git clone https://github.com/chris-marsh/pureline.git /etc/skel/.config/pureline \
  && useradd -m -d ${USER_HOME}/ -s /bin/bash ${USER} \
