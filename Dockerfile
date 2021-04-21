@@ -12,7 +12,7 @@ ENV PYTHON_VERSION=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST}.${PYTHO
 
 # Build and install python
 RUN apt update \
- && apt install -y curl build-essential ca-certificates zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev \
+ && apt install -y curl build-essential ca-certificates zlib1g-dev liblzma-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev libbz2-dev \
  && cd /opt \
  && curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz \
  && tar -xf Python-${PYTHON_VERSION}.tar.xz \
