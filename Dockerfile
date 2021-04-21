@@ -27,7 +27,7 @@ RUN apt update \
  && rm -rf /opt/Python-${PYTHON_VERSION}
 
 # Required packages for python
-ADD rootfs/Pipfile /root/Pipfile
+ADD rootfs/Pipfile /root/
 # Update pip, install pipenv and install python packages
 RUN apt install --no-install-recommends -y npm fonts-firacode nodejs libjs-mathjax pandoc \
  && pip install --upgrade pip \
@@ -37,8 +37,7 @@ RUN apt install --no-install-recommends -y npm fonts-firacode nodejs libjs-mathj
  && pip install -r requirements.txt
 
 # Make skel dir
-ADD rootfs/.bashrc /etc/skel/.bashrc
-ADD rootfs/.tmux.conf /etc/skel/.tmux.conf
+ADD rootfs/.bashrc rootfs/.tmux.conf /etc/skel/
 ADD rootfs/init.vim /etc/skel/.config/nvim/init.vim
 ADD rootfs/jupyter_myinit /usr/local/bin/jupyter_myinit
 RUN apt install --no-install-recommends -y bash tmux git openssh-client neovim universal-ctags \
