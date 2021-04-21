@@ -33,8 +33,7 @@ RUN apt install --no-install-recommends -y npm fonts-firacode nodejs libjs-mathj
  && pip install --upgrade pip \
  && pip install pipenv \
  && cd /root \
- && pipenv lock -r > requirements.txt \
- && pip install --upgrade pip \
+ && pipenv lock --python ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR_FIRST} -r > requirements.txt \
  && pip install -r requirements.txt
 
 # Make skel dir
